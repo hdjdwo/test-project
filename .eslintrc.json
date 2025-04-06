@@ -1,9 +1,7 @@
 {
   "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:@typescript-eslint/recommended",
+    "react-app",  
+    "react-app/jest",
     "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
@@ -21,10 +19,13 @@
     }
   },
   "rules": {
-    "indent": "off",
-    "@typescript-eslint/indent": "off",
-    "react/prop-types": "off",
-    "@typescript-eslint/no-unused-vars": "warn",
-    "prettier/prettier": ["error", { "endOfLine": "auto" }]
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto",
+        "printWidth": 120,
+        "tabWidth": 2
+      }
+    ]
   }
 }
