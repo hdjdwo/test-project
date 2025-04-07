@@ -6,7 +6,7 @@ export const api = createApi({
     baseUrl: 'https://rickandmortyapi.com/api/',
   }),
   endpoints: build => ({
-    getCharacter: build.query<ICharacter[], void>({
+    getCharacter: build.query<ICharacter, void>({
       query: () => 'character',
     }),
   }),

@@ -1,11 +1,11 @@
 import React from 'react';
 
-export interface ICharacter {
+export interface IResults {
   id: number;
-  name: string;
-  status: string;
-  species: string;
-  image: string;
+}
+
+export interface ICharacter {
+  results: IResults[];
 }
 
 interface ListProps<T> {
