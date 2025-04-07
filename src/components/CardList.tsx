@@ -2,17 +2,16 @@ import React from 'react';
 import { useGetCharacterQuery } from '../store/api';
 import { data } from 'react-router-dom';
 import Card from './Card';
-import { IResults } from './types/types';
+import List, { ICharacter } from './types/types';
 
 const CardList = () => {
-  const { data: characters } = useGetCharacterQuery();
+  const { data, error, isLoading } = useGetCharacterQuery();
+  const characters = data?.results;
 
-  console.log(characters?.results);
+  console.log(data);
   return (
     <div>
-      {characters?.results.map((character: IResults) => (
-        <Card character={character} />
-      ))}
+      {characters && <List item={characters} renderItem={(character: ICharacter) => <Card character={character} />} />}
     </div>
   );
 };

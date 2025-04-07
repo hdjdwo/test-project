@@ -9,8 +9,6 @@ function App() {
   return (
     <div className="App" style={{ height: windowInnerHeight, width: windowInnerWidth }}>
       <div>
-        Helloasd
-        <h2>asdsad</h2>
         <CardList />
       </div>
     </div>

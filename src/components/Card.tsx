@@ -1,12 +1,17 @@
 import React, { FC } from 'react';
-import { IResults } from './types/types';
+import { ICharacter } from './types/types';
 
 interface CardProps {
-  character: IResults;
+  character: ICharacter;
 }
 
 const Card: FC<CardProps> = ({ character }) => {
-  return <div>{character}</div>;
+  return (
+    <div>
+      <h2>{character.name}</h2>
+      <img src={character.image} alt="" />
+    </div>
+  );
 };
 
 export default Card;
