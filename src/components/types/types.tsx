@@ -18,5 +18,5 @@ export interface ListProps<T> {
 }
 
 export default function List<T>(props: ListProps<T>) {
-  return <div>{props.item.map(props.renderItem)}</div>;
+  return <>{props.item.map(props.renderItem)}</>;
 }
