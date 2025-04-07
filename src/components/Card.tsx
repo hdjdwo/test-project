@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { FC } from 'react';
+import { IResults } from './types/types';
 
-const Card = () => {
-  return <div>Card</div>;
+interface CardProps {
+  character: IResults;
+}
+
+const Card: FC<CardProps> = ({ character }) => {
+  return <div>{character}</div>;
 };
 
 export default Card;
