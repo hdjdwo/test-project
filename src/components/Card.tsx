@@ -6,9 +6,10 @@ import { useNavigate } from 'react-router-dom';
 interface CardProps {
   character: ICharacter;
   onClick: (character: ICharacter) => void;
+  delete: (id: number) => void;
 }
 
-const Card: FC<CardProps> = ({ character, onClick }) => {
+const Card: FC<CardProps> = ({ character, onClick, delete }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showReadMore, setShowReadMore] = useState(false);
   const [like, setLike] = useState(false);
@@ -29,6 +30,7 @@ const Card: FC<CardProps> = ({ character, onClick }) => {
 
   return (
     <div onClick={() => onClick(character)} className={style.container}>
+      <button onClick={() => delete(character.id)}>delete</button>
       <div className={style.card}>
         <h3>{character.name}</h3>
         <img className={style.img} src={character.image} alt="" />

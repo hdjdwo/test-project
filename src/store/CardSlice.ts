@@ -1,24 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ICharacter } from '../components/types/types';
-import { useGetCharacterQuery } from './api';
-
-const { data, error, isLoading } = useGetCharacterQuery();
-const characters = data?.results;
 
 interface cardSlice {
-  characters: ICharacter | ICharacter[] | undefined;
+  deletedId: number[];
 }
 
 const initialState: cardSlice = {
-  characters: characters,
+  deletedId: [],
 };
 
 const cardSlice = createSlice({
   name: 'card',
   initialState,
   reducers: {
-    deleteCard: (state, action: PayloadAction<ICharacter[]>) => {
-      return state;
+    deleteCard: (state, action: PayloadAction<number>) => {
+      state.deletedId.push(action.payload);
     },
   },
 });
