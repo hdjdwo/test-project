@@ -1,0 +1,42 @@
+.page {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  font-size: 2rem;
+  align-items: center;
+  background-color: #2a8c828c;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.name {
+  text-align: center;
+}
+
+.btn {
+  margin-top: 10rem;
+  margin-left: 60rem;
+}
+
+.back {
+  font-size: 1.5rem;
+  width: 10rem;
+  height: 3rem;
+  border-radius: 2rem;
+  background-color: #f2e7dc9d;
+  cursor: pointer;
+}
+
+.dead {
+  color: red;
+}
+
+.alive {
+  color: green;
+}
+
+.unknown {
+  color: grey;
+}
