@@ -9,7 +9,9 @@ function App() {
   return (
     <BrowserRouter>
       <nav>
-        <NavLink to="/cards">Cards</NavLink>
+        <NavLink style={{ fontSize: '3rem', marginLeft: '20rem', color: '#13678A' }} to="/cards">
+          Cards
+        </NavLink>
       </nav>
       <Routes>
         <Route path="/cards" element={<CardList />} />

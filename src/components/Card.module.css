@@ -23,9 +23,14 @@ border-radius: 2rem;
 
 .card {
   display: flex;
+  margin-top: 0;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.text_name {
+  margin-top: 1 rem;
 }
 
 .text {
@@ -39,6 +44,13 @@ border-radius: 2rem;
 
 .text.expanded {
   -webkit-line-clamp: unset;
+}
+
+.delete_btn {
+  width: 7rem;
+  border-radius: 2rem;
+  background-color: #b38686d4;
+  cursor: pointer;
 }
 
 .read_more {

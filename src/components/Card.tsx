@@ -2,18 +2,22 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import { ICharacter } from './types/types';
 import style from './Card.module.css';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { toggleToFavorite } from '../store/CardSlice';
 
 interface CardProps {
   character: ICharacter;
   onClick: (character: ICharacter) => void;
-  delete: (id: number) => void;
+  deleteCard: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void;
 }
 
-const Card: FC<CardProps> = ({ character, onClick, delete }) => {
+const Card: FC<CardProps> = ({ character, onClick, deleteCard }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showReadMore, setShowReadMore] = useState(false);
   const [like, setLike] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
+  const favoriteId = useAppSelector(state => state.cardSlice.favoriteId);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (textRef.current) {
@@ -22,17 +26,20 @@ const Card: FC<CardProps> = ({ character, onClick, delete }) => {
     }
   }, [textRef]);
 
-  const likeHandler = (e: React.MouseEvent<HTMLOrSVGElement>) => {
+  const likeHandler = (e: React.MouseEvent<HTMLOrSVGElement>, id: number) => {
     like === true ? setLike(false) : setLike(true);
-    console.log(like);
     e.stopPropagation();
+    dispatch(toggleToFavorite(id));
+    console.log(favoriteId);
   };
 
   return (
     <div onClick={() => onClick(character)} className={style.container}>
-      <button onClick={() => delete(character.id)}>delete</button>
+      <button className={style.delete_btn} onClick={e => deleteCard(e, character.id)}>
+        Удалить
+      </button>
       <div className={style.card}>
-        <h3>{character.name}</h3>
+        <h3 className={style.text_name}>{character.name}</h3>
         <img className={style.img} src={character.image} alt="" />
         <div>
           <p ref={textRef} className={isExpanded ? [style.text, style.expanded].join(' ') : style.text}>
@@ -61,11 +68,11 @@ const Card: FC<CardProps> = ({ character, onClick, delete }) => {
               )}
             </div>
             <svg
-              onClick={likeHandler}
+              onClick={e => likeHandler(e, character.id)}
               className={like === false ? style.svg : [style.svg, style.active].join(' ')}
               xmlns="http://www.w3.org/2000/svg"
-              width="4rem"
-              height="4rem"
+              width="3rem"
+              height="3rem"
               viewBox="0 0 24 24"
               fill="none">
               <path
