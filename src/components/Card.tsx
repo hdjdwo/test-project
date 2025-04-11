@@ -17,6 +17,7 @@ const Card: FC<CardProps> = ({ character, onClick, deleteCard }) => {
   const [like, setLike] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
   const favoriteId = useAppSelector(state => state.cardSlice.favoriteId);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -30,7 +31,6 @@ const Card: FC<CardProps> = ({ character, onClick, deleteCard }) => {
     like === true ? setLike(false) : setLike(true);
     e.stopPropagation();
     dispatch(toggleToFavorite(id));
-    console.log(favoriteId);
   };
 
   return (
@@ -69,7 +69,7 @@ const Card: FC<CardProps> = ({ character, onClick, deleteCard }) => {
             </div>
             <svg
               onClick={e => likeHandler(e, character.id)}
-              className={like === false ? style.svg : [style.svg, style.active].join(' ')}
+              className={favoriteId.includes(character.id) ? [style.svg, style.active].join(' ') : style.svg}
               xmlns="http://www.w3.org/2000/svg"
               width="3rem"
               height="3rem"

@@ -18,10 +18,12 @@ const cardSlice = createSlice({
       state.deletedId.push(action.payload);
     },
     toggleToFavorite: (state, action: PayloadAction<number>) => {
-      if (state.favoriteId.includes(action.payload)) {
-        state.favoriteId.filter(id => id !== action.payload);
-      } else {
+      const index = state.favoriteId.indexOf(action.payload);
+
+      if (index === -1) {
         state.favoriteId.push(action.payload);
+      } else {
+        state.favoriteId.splice(index, 1);
       }
     },
   },
