@@ -10,6 +10,7 @@ import style from './CardList.module.css';
 const FavoriteCardList = () => {
   const { data, error, isLoading } = useGetCharacterQuery();
   const characters = data?.results;
+
   const storageValueFavorite = localStorage.getItem('favorite') ?? ' ';
   const [filterCharacters, setFilterCharacters] = useState<ICharacter[]>(characters ? characters : []);
   const [favoriteCharacters, setFavoriteCharacters] = useState<ICharacter[]>(
