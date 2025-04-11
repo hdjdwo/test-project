@@ -10,8 +10,11 @@ import style from './CardList.module.css';
 const FavoriteCardList = () => {
   const { data, error, isLoading } = useGetCharacterQuery();
   const characters = data?.results;
+  const storageValueFavorite = localStorage.getItem('favorite') ?? ' ';
   const [filterCharacters, setFilterCharacters] = useState<ICharacter[]>(characters ? characters : []);
-  const [favoriteCharacters, setFavoriteCharacters] = useState<ICharacter[]>([]);
+  const [favoriteCharacters, setFavoriteCharacters] = useState<ICharacter[]>(
+    JSON.parse(storageValueFavorite) ? JSON.parse(storageValueFavorite) : [],
+  );
   const deleteId = useAppSelector(state => state.cardSlice.deletedId);
 
   const favoriteId = useAppSelector(state => state.cardSlice.favoriteId);
@@ -20,13 +23,22 @@ const FavoriteCardList = () => {
 
   useEffect(() => {
     if (characters) {
+      localStorage.setItem('favorite', JSON.stringify(favoriteCharacters));
       setFavoriteCharacters(
-        characters.filter(character => !deleteId.includes(character.id) && favoriteId.includes(character.id)),
+        JSON.parse(storageValueFavorite).filter(
+          (character: ICharacter) => !deleteId.includes(character.id) && favoriteId.includes(character.id),
+        ),
       );
+      setFilterCharacters(characters.filter(character => !deleteId.includes(character.id)));
     }
   }, [characters, deleteId, favoriteId]);
 
-  const favoriteHandler = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
+  const filterHandler = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
+    e.stopPropagation();
+    dispatch(deleteCard(id));
+  };
+
+  const likeHandler = (e: React.MouseEvent<SVGSVGElement>, id: number) => {
     e.stopPropagation();
     dispatch(toggleToFavorite(id));
   };
@@ -38,7 +50,8 @@ const FavoriteCardList = () => {
           item={favoriteCharacters}
           renderItem={(character: ICharacter) => (
             <Card
-              deleteCard={(e, id) => favoriteHandler(e, id)}
+              deleteCard={(e, id) => filterHandler(e, id)}
+              likeCard={(e, id) => likeHandler(e, id)}
               onClick={() => navigate(`/cards/${character.id}`)}
               character={character}
               key={character.id}

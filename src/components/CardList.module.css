@@ -6,3 +6,10 @@
   flex-wrap: wrap;
   background-color: #f2e7dc9d;
 }
+
+.btn {
+  margin-top: 2rem;
+  font-size: 1.7rem;
+  border-color: red;
+
+}

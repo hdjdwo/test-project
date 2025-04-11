@@ -9,15 +9,15 @@ interface CardProps {
   character: ICharacter;
   onClick: (character: ICharacter) => void;
   deleteCard: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void;
+  likeCard?: (e: React.MouseEvent<SVGSVGElement>, id: number) => void;
 }
 
-const Card: FC<CardProps> = ({ character, onClick, deleteCard }) => {
+const Card: FC<CardProps> = ({ character, onClick, deleteCard, likeCard }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showReadMore, setShowReadMore] = useState(false);
   const [like, setLike] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
   const favoriteId = useAppSelector(state => state.cardSlice.favoriteId);
-
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -26,12 +26,6 @@ const Card: FC<CardProps> = ({ character, onClick, deleteCard }) => {
       setShowReadMore(element.scrollHeight > element.clientHeight);
     }
   }, [textRef]);
-
-  const likeHandler = (e: React.MouseEvent<HTMLOrSVGElement>, id: number) => {
-    like === true ? setLike(false) : setLike(true);
-    e.stopPropagation();
-    dispatch(toggleToFavorite(id));
-  };
 
   return (
     <div onClick={() => onClick(character)} className={style.container}>
@@ -68,7 +62,7 @@ const Card: FC<CardProps> = ({ character, onClick, deleteCard }) => {
               )}
             </div>
             <svg
-              onClick={e => likeHandler(e, character.id)}
+              onClick={e => (likeCard ? likeCard(e, character.id) : e)}
               className={favoriteId.includes(character.id) ? [style.svg, style.active].join(' ') : style.svg}
               xmlns="http://www.w3.org/2000/svg"
               width="3rem"

@@ -9,19 +9,29 @@ import cardSlice, { deleteCard } from '../store/CardSlice';
 
 const CardList = () => {
   const { data, error, isLoading } = useGetCharacterQuery();
+  const storageValue = localStorage.getItem('deleted') ?? ' ';
   const characters = data?.results;
-  const [filterCharacters, setFilterCharacters] = useState<ICharacter[]>(characters ? characters : []);
+  const [filterCharacters, setFilterCharacters] = useState<ICharacter[]>(
+    JSON.parse(storageValue) ? JSON.parse(storageValue) : characters,
+  );
 
   const dispatch = useAppDispatch();
   const deleteId = useAppSelector(state => state.cardSlice.deletedId);
 
-  const navigate = useNavigate();
+  console.log(characters);
 
+  const navigate = useNavigate();
   useEffect(() => {
     if (characters) {
-      setFilterCharacters(characters.filter(character => !deleteId.includes(character.id)));
+      localStorage.setItem('deleted', JSON.stringify(filterCharacters));
+      setFilterCharacters(JSON.parse(storageValue).filter((character: ICharacter) => !deleteId.includes(character.id)));
     }
-  }, [characters, deleteId]);
+  }, [characters, deleteId, storageValue]);
+
+  const resetToInitial = () => {
+    setFilterCharacters(characters ? characters : []);
+    localStorage.setItem('deleted', JSON.stringify(characters));
+  };
 
   const filterHandler = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     e.stopPropagation();
@@ -29,20 +39,25 @@ const CardList = () => {
   };
 
   return (
-    <div className={style.container}>
-      {filterCharacters && (
-        <List
-          item={filterCharacters}
-          renderItem={(character: ICharacter) => (
-            <Card
-              deleteCard={(e, id) => filterHandler(e, id)}
-              onClick={() => navigate(`/cards/${character.id}`)}
-              character={character}
-              key={character.id}
-            />
-          )}
-        />
-      )}
+    <div>
+      <button onClick={resetToInitial} className={style.btn}>
+        Сбросить к исходному состоянию(вернуть удаленные файлы!)
+      </button>
+      <div className={style.container}>
+        {filterCharacters && (
+          <List
+            item={filterCharacters}
+            renderItem={(character: ICharacter) => (
+              <Card
+                deleteCard={(e, id) => filterHandler(e, id)}
+                onClick={() => navigate(`/cards/${character.id}`)}
+                character={character}
+                key={character.id}
+              />
+            )}
+          />
+        )}
+      </div>
     </div>
   );
 };
