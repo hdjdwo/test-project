@@ -8,7 +8,7 @@ import FavoriteCardList from './components/FavoriteCardList';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/test-project">
       <nav>
         <NavLink style={{ fontSize: '3rem', marginLeft: '20rem', color: '#13678A' }} to="/cards">
           Cards
