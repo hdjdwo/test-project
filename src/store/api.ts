@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IApiResponse, ICharacter } from '../components/types/types';
+import { IApiResponse, ICharacter, ICharacterProps } from '../components/types/types';
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
@@ -9,7 +9,7 @@ export const api = createApi({
     getCharacter: build.query<IApiResponse, void>({
       query: () => 'character',
     }),
-    getCharacterById: build.query<ICharacter, string>({
+    getCharacterById: build.query<ICharacterProps, string>({
       query: id => `/character/${id}`,
     }),
   }),

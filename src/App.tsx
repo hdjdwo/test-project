@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import CardList from './components/CardList';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import CardPage from './components/CardPage';
 import { NavLink } from 'react-router-dom';
 import FavoriteCardList from './components/FavoriteCardList';
+import { ICharacterProps } from './components/types/types';
+import { useGetCharacterQuery } from './store/api';
 
 function App() {
   return (

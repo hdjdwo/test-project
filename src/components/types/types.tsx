@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface IApiResponse {
-  results: ICharacter[];
+  results: ICharacterProps[];
 }
 
 export interface ICharacter {
@@ -10,6 +10,11 @@ export interface ICharacter {
   status: string;
   species: string;
   image: string;
+}
+
+export interface ICharacterProps extends ICharacter {
+  favorite?: boolean;
+  isDelete?: boolean;
 }
 
 export interface ListProps<T> {

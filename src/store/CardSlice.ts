@@ -1,13 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ICharacterProps } from '../components/types/types';
 
 interface cardSlice {
-  deletedId: number[];
-  favoriteId: number[];
+  characters: ICharacterProps[];
 }
 
 const initialState: cardSlice = {
-  deletedId: [],
-  favoriteId: [],
+  characters: [],
 };
 
 const cardSlice = createSlice({
@@ -15,19 +14,20 @@ const cardSlice = createSlice({
   initialState,
   reducers: {
     deleteCard: (state, action: PayloadAction<number>) => {
-      state.deletedId.push(action.payload);
-    },
-    toggleToFavorite: (state, action: PayloadAction<number>) => {
-      const index = state.favoriteId.indexOf(action.payload);
+      const index = state.characters.findIndex(char => char.id === action.payload);
 
-      if (index === -1) {
-        state.favoriteId.push(action.payload);
-      } else {
-        state.favoriteId.splice(index, 1);
+      if (index !== -1) {
+        state.characters[index] = {
+          ...state.characters[index],
+          isDelete: true,
+        };
       }
+    },
+    addCharacters: (state, action: PayloadAction<ICharacterProps[]>) => {
+      state.characters = action.payload;
     },
   },
 });
 
-export const { deleteCard, toggleToFavorite } = cardSlice.actions;
+export const { deleteCard, addCharacters } = cardSlice.actions;
 export default cardSlice.reducer;

@@ -1,15 +1,14 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { ICharacter } from './types/types';
+import { ICharacter, ICharacterProps } from './types/types';
 import style from './Card.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { toggleToFavorite } from '../store/CardSlice';
 
 interface CardProps {
-  character: ICharacter;
+  character: ICharacterProps;
   onClick: (character: ICharacter) => void;
   deleteCard: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void;
-  likeCard?: (e: React.MouseEvent<SVGSVGElement>, id: number) => void;
+  likeCard: (e: React.MouseEvent<SVGSVGElement>, id: number) => void;
 }
 
 const Card: FC<CardProps> = ({ character, onClick, deleteCard, likeCard }) => {
@@ -17,7 +16,6 @@ const Card: FC<CardProps> = ({ character, onClick, deleteCard, likeCard }) => {
   const [showReadMore, setShowReadMore] = useState(false);
   const [like, setLike] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
-  const favoriteId = useAppSelector(state => state.cardSlice.favoriteId);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -62,8 +60,8 @@ const Card: FC<CardProps> = ({ character, onClick, deleteCard, likeCard }) => {
               )}
             </div>
             <svg
-              onClick={e => (likeCard ? likeCard(e, character.id) : e)}
-              className={favoriteId.includes(character.id) ? [style.svg, style.active].join(' ') : style.svg}
+              onClick={e => likeCard(e, character.id)}
+              // className={favoriteId.includes(character.id) ? [style.svg, style.active].join(' ') : style.svg}
               xmlns="http://www.w3.org/2000/svg"
               width="3rem"
               height="3rem"
