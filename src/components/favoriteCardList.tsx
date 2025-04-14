@@ -4,23 +4,36 @@ import List, { ICharacter, ICharacterProps } from './types/types';
 import { useNavigate } from 'react-router-dom';
 import Card from './Card';
 import { useGetCharacterQuery } from '../store/api';
-import { addCharacters, toggleFavorite, deleteCard } from '../store/CardSlice';
 import style from './CardList.module.css';
 
 const FavoriteCardList = () => {
-  const { data, error, isLoading } = useGetCharacterQuery();
-  const characterList = useAppSelector(state => state.cardSlice.characters);
+  const { data, error, isLoading, isSuccess } = useGetCharacterQuery();
   const storage = localStorage.getItem('filter') ?? '';
   const [filter, setFilter] = useState<ICharacterProps[]>(data ? data.results : []);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (data?.results) {
-      dispatch(addCharacters(JSON.parse(storage)));
-      setFilter(JSON.parse(storage));
+    if (isSuccess && data?.results) {
+      setFilter(data.results);
     }
-  }, [isLoading, storage]);
+  }, [isSuccess, data, dispatch]);
+
+  useEffect(() => {
+    const savedData = localStorage.getItem('characters');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      setFilter(parsedData);
+    }
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <div>Идет загрузка</div>; // Показываем индикатор загрузки
+  }
+
+  if (error) {
+    return <div>Произошла ошибка при загрузке данных</div>;
+  }
 
   const filterHandler = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     if (data?.results) {

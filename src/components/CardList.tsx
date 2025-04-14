@@ -8,18 +8,33 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import { useSelector } from 'react-redux';
 
 const CardList = () => {
-  const { data, error, isLoading } = useGetCharacterQuery();
-  const characterList = useAppSelector(state => state.cardSlice.characters);
+  const { data, error, isLoading, isSuccess } = useGetCharacterQuery();
   const storage = localStorage.getItem('filter') ?? '';
   const [filter, setFilter] = useState<ICharacterProps[]>(data ? data.results : []);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (data?.results) {
-      setFilter(JSON.parse(storage));
+    if (isSuccess && data?.results) {
+      setFilter(data.results);
     }
-  }, [isLoading, storage]);
+  }, [isSuccess, data, dispatch]);
+
+  useEffect(() => {
+    const savedData = localStorage.getItem('characters');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      setFilter(parsedData);
+    }
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <div>Идет загрузка</div>; // Показываем индикатор загрузки
+  }
+
+  if (error) {
+    return <div>Произошла ошибка при загрузке данных</div>;
+  }
 
   const resetToInitial = () => {
     if (data?.results) {
@@ -49,7 +64,6 @@ const CardList = () => {
       );
     }
   };
-  console.log(filter);
   return (
     <div>
       <button onClick={resetToInitial} className={style.btn}>
