@@ -14,9 +14,7 @@ interface CardProps {
 const Card: FC<CardProps> = ({ character, onClick, deleteCard, likeCard }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showReadMore, setShowReadMore] = useState(false);
-  const [like, setLike] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (textRef.current) {
@@ -61,7 +59,8 @@ const Card: FC<CardProps> = ({ character, onClick, deleteCard, likeCard }) => {
             </div>
             <svg
               onClick={e => likeCard(e, character.id)}
-              // className={favoriteId.includes(character.id) ? [style.svg, style.active].join(' ') : style.svg}
+              // onClick={() => console.log(character.favorite)}
+              className={character.favorite ? [style.svg, style.active].join(' ') : style.svg}
               xmlns="http://www.w3.org/2000/svg"
               width="3rem"
               height="3rem"

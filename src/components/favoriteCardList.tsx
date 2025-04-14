@@ -1,38 +1,54 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import List, { ICharacter } from './types/types';
+import List, { ICharacter, ICharacterProps } from './types/types';
 import { useNavigate } from 'react-router-dom';
 import Card from './Card';
 import { useGetCharacterQuery } from '../store/api';
-import { deleteCard } from '../store/CardSlice';
+import { addCharacters, toggleFavorite, deleteCard } from '../store/CardSlice';
 import style from './CardList.module.css';
 
 const FavoriteCardList = () => {
   const { data, error, isLoading } = useGetCharacterQuery();
-  const characters = data?.results;
-
-  const storageValueFavorite = localStorage.getItem('favorite') ?? ' ';
-  const [filterCharacters, setFilterCharacters] = useState<ICharacter[]>(characters ? characters : []);
-  const [favoriteCharacters, setFavoriteCharacters] = useState<ICharacter[]>(
-    JSON.parse(storageValueFavorite) ? JSON.parse(storageValueFavorite) : [],
-  );
-
+  const characterList = useAppSelector(state => state.cardSlice.characters);
+  const storage = localStorage.getItem('filter') ?? '';
+  const [filter, setFilter] = useState<ICharacterProps[]>(data ? data.results : []);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const filterHandler = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
-    e.stopPropagation();
-  };
+  useEffect(() => {
+    if (data?.results) {
+      dispatch(addCharacters(JSON.parse(storage)));
+      setFilter(JSON.parse(storage));
+    }
+  }, [isLoading, storage]);
 
+  const filterHandler = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
+    if (data?.results) {
+      e.stopPropagation();
+      setFilter(filter.map(item => (item.id === id ? { ...item, isDelete: true } : item)));
+      localStorage.setItem(
+        'filter',
+        JSON.stringify(filter.map(item => (item.id === id ? { ...item, isDelete: true } : item))),
+      );
+    }
+  };
   const likeHandler = (e: React.MouseEvent<SVGSVGElement>, id: number) => {
-    e.stopPropagation();
+    if (data?.results) {
+      e.stopPropagation();
+      setFilter(filter.map(item => (item.id === id ? { ...item, favorite: !item.favorite } : item)));
+      localStorage.setItem(
+        'filter',
+        JSON.stringify(filter.map(item => (item.id === id ? { ...item, favorite: !item.favorite } : item))),
+      );
+      console.log(filter);
+    }
   };
 
   return (
     <div className={style.container}>
-      {favoriteCharacters && (
+      {filter && (
         <List
-          item={favoriteCharacters}
+          item={filter.filter(item => !item.isDelete && item.favorite)}
           renderItem={(character: ICharacter) => (
             <Card
               deleteCard={(e, id) => filterHandler(e, id)}
