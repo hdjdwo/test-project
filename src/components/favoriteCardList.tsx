@@ -7,53 +7,41 @@ import { useGetCharacterQuery } from '../store/api';
 import style from './CardList.module.css';
 
 const FavoriteCardList = () => {
-  const { data, error, isLoading, isSuccess } = useGetCharacterQuery();
-  const storage = localStorage.getItem('filter') ?? '';
-  const [filter, setFilter] = useState<ICharacterProps[]>(data ? data.results : []);
-  const dispatch = useAppDispatch();
+  const { data, error, isLoading } = useGetCharacterQuery();
+  const [filter, setFilter] = useState<ICharacterProps[]>([]);
+  const storage: ICharacterProps[] =
+    localStorage.getItem('filter') !== 'undefined' && localStorage.getItem('filter') !== null
+      ? JSON.parse(localStorage.getItem('filter') ?? '')
+      : data?.results;
+
   const navigate = useNavigate();
-
   useEffect(() => {
-    if (isSuccess && data?.results) {
-      setFilter(data.results);
+    if (localStorage.getItem('filter') !== 'undefined' && localStorage.getItem('filter') !== null) {
+      setFilter(prev => (prev = storage));
+    } else {
+      localStorage.setItem('filter', JSON.stringify(data?.results));
+      setFilter(prev => (prev = storage));
     }
-  }, [isSuccess, data, dispatch]);
-
-  useEffect(() => {
-    const savedData = localStorage.getItem('characters');
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      setFilter(parsedData);
-    }
-  }, [dispatch]);
-
-  if (isLoading) {
-    return <div>Идет загрузка</div>; // Показываем индикатор загрузки
-  }
-
-  if (error) {
-    return <div>Произошла ошибка при загрузке данных</div>;
-  }
+  }, [isLoading, data]);
 
   const filterHandler = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     if (data?.results) {
       e.stopPropagation();
-      setFilter(filter.map(item => (item.id === id ? { ...item, isDelete: true } : item)));
+      setFilter(storage.map(item => (item.id === id ? { ...item, isDelete: true } : item)));
       localStorage.setItem(
         'filter',
-        JSON.stringify(filter.map(item => (item.id === id ? { ...item, isDelete: true } : item))),
+        JSON.stringify(storage.map(item => (item.id === id ? { ...item, isDelete: true } : item))),
       );
     }
   };
   const likeHandler = (e: React.MouseEvent<SVGSVGElement>, id: number) => {
     if (data?.results) {
       e.stopPropagation();
-      setFilter(filter.map(item => (item.id === id ? { ...item, favorite: !item.favorite } : item)));
+      setFilter(storage.map(item => (item.id === id ? { ...item, favorite: !item.favorite } : item)));
       localStorage.setItem(
         'filter',
-        JSON.stringify(filter.map(item => (item.id === id ? { ...item, favorite: !item.favorite } : item))),
+        JSON.stringify(storage.map(item => (item.id === id ? { ...item, favorite: !item.favorite } : item))),
       );
-      console.log(filter);
     }
   };
 
